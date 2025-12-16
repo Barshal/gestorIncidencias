@@ -59,5 +59,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.0")
     // Lifecycle (necesario para que la vista observe al ViewModel)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
+    // Gson para serializar/deserializar JSON
+    implementation("com.google.code.gson:gson:2.10.1")
 
 }

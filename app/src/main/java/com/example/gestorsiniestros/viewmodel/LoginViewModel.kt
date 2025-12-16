@@ -8,10 +8,11 @@ class LoginViewModel : ViewModel() {
 
     // 1. LiveData para el estado de la UI (privado y mutable)
     private val _loginResult = MutableLiveData<LoginResult>()
+
     // 2. LiveData expuesto a la Vista (público e inmutable)
     val loginResult: LiveData<LoginResult> = _loginResult
+    // Creo una instancia del adapter. Para inicializarlo necesito una lista y un contexto
 
-    // 3. Función que la Vista llamará cuando el usuario haga clic en "Acceder"
     fun onLoginClicked(user: String, pass: String) {
         // Aquí va TODA la lógica de negocio que antes estaba en la Activity
         if (user.isEmpty() || pass.isEmpty()) {
