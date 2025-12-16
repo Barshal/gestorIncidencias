@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    //Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -50,4 +51,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.3")
+    // Para Fragments (muy recomendado para la navegación)
+    implementation("androidx.fragment:fragment-ktx:1.8.0")
+    // Lifecycle (necesario para que la vista observe al ViewModel)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
+
 }
