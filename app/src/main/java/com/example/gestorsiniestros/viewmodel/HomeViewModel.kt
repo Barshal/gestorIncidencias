@@ -1,3 +1,6 @@
+package com.example.gestorsiniestros.viewmodel
+
+import OrdenesGeneralRequest
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

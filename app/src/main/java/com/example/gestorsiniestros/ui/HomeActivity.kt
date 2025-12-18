@@ -1,14 +1,17 @@
 package com.example.gestorsiniestros.ui
 
-import HomeViewModel
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gestorsiniestros.adapter.OnOrdenEstadoClickListener
 import com.example.gestorsiniestros.adapter.OrdenResumenAdapter
+import com.example.gestorsiniestros.data.model.OrdenEstado
 import com.example.gestorsiniestros.databinding.ActivityHomeBinding
+import com.example.gestorsiniestros.viewmodel.HomeViewModel
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), OnOrdenEstadoClickListener {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var adapterOrdenEstado: OrdenResumenAdapter
@@ -25,7 +28,6 @@ class HomeActivity : AppCompatActivity() {
         initGUI()
         observadores()
 
-        // Pide al ViewModel que cargue los datos
         homeViewModel.cargarOrdenes()
     }
 
@@ -46,11 +48,18 @@ class HomeActivity : AppCompatActivity() {
             // Actualiza el adaptador del RecyclerView con la nueva lista
             adapterOrdenEstado.actualizarLista(listaOrdenes)
         }
+    }
 
-        // (Opcional) Observa el estado de carga para mostrar/ocultar un ProgressBar
-        homeViewModel.isLoading.observe(this) { estaCargando ->
-            // if (estaCargando) binding.progressBar.visibility = View.VISIBLE
-            // else binding.progressBar.visibility = View.GONE
-        }
+    // 5. Metodo que se ejecuta cuando el boton es pulsado, no se si este es el mejor sitio para esto
+    override fun onItemClicked(ordenEstado: OrdenEstado) {
+        // Creamos un Intent para lanzar la nueva Activity.
+        val intent = Intent(this, ListaOrdenesActivity::class.java)
+
+        // Pasamos datos a la nueva Activity para que sepa qué mostrar.
+        intent.putExtra("ESTADO_TEXTO", ordenEstado.textoEstado)
+        intent.putExtra("ESTADO_COUNT", ordenEstado.ordenesCount)
+
+        // Lanzamos la Activity.
+        startActivity(intent)
     }
 }
