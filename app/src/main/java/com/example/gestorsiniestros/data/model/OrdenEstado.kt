@@ -1,4 +1,4 @@
-package com.example.gestorsiniestros.model
+package com.example.gestorsiniestros.data.model
 
 import com.google.gson.annotations.SerializedName
 
