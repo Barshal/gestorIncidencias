@@ -56,8 +56,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 3. Icono de la flecha a la derecha -->
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
