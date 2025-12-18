@@ -1,30 +1,30 @@
 package com.example.gestorsiniestros.data.remote
 
-// 1. CORRECCIÓN: La importación de ApiService debe ser completa.
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://acceso.intranext.es/api/gestinsin/v1/"
 
-    val instance: ApiService by lazy {
-        // 3. MEJORA: Añadido un interceptor de logging para depurar las llamadas a la API.
-        //    Esto te permitirá ver en el Logcat qué envías y qué recibes.
+    // 1. Mantenemos el cliente OkHttpClient centralizado.
+    //    El interceptor de logs se aplicará a AMBAS llamadas.
+    private val okHttpClient: OkHttpClient by lazy {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-        val client = OkHttpClient.Builder()
+        OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
+    }
 
+    // 2. Creamos una FUNCIÓN que genera un servicio de Retrofit para una URL base específica.
+    fun createService(baseUrl: String): ApiService {
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl) // <-- Usará la URL que le pasemos
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client) // <-- Se añade el cliente con el interceptor
+            .client(okHttpClient) // Reutilizamos el mismo cliente
             .build()
 
-        retrofit.create(ApiService::class.java)
+        return retrofit.create(ApiService::class.java)
     }
 }
