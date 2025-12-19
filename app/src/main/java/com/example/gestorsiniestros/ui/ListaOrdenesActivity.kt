@@ -36,7 +36,6 @@ class ListaOrdenesActivity : AppCompatActivity() {
         initUI()
         // 2. Configuramos los observadores del ViewModel
         initObservers()
-        // 3. Solicitamos los datos
     }
 
 
