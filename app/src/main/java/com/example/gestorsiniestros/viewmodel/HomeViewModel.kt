@@ -1,6 +1,6 @@
 package com.example.gestorsiniestros.viewmodel
 
-import OrdenesGeneralRequest
+import OrdenesEstadoRequest
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,7 +23,7 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val filtroParaApi = OrdenesGeneralRequest(
+                val filtroParaApi = OrdenesEstadoRequest(
                     empresa = "001",
                     userId = "7"
                 )

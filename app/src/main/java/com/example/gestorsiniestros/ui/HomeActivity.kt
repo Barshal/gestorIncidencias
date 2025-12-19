@@ -56,8 +56,10 @@ class HomeActivity : AppCompatActivity(), OnOrdenEstadoClickListener {
         val intent = Intent(this, ListaOrdenesActivity::class.java)
 
         // Pasamos datos a la nueva Activity para que sepa qué mostrar.
-        intent.putExtra("ESTADO_TEXTO", ordenEstado.textoEstado)
-        intent.putExtra("ESTADO_COUNT", ordenEstado.ordenesCount)
+        intent.putExtra("estado", ordenEstado.id)
+        intent.putExtra("userId", 7)
+        intent.putExtra("empresaId", "001")
+
 
         // Lanzamos la Activity.
         startActivity(intent)

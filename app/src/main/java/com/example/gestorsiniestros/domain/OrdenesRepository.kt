@@ -1,9 +1,11 @@
 package com.example.gestorsiniestros.domain
 
-import OrdenesGeneralRequest
+import OrdenesEstadoRequest
 import android.util.Log
 import com.example.gestorsiniestros.data.model.OrdenEstado
+import com.example.gestorsiniestros.data.model.OrdenResumen
 import com.example.gestorsiniestros.data.remote.RetrofitClient
+import com.example.gestorsiniestros.data.remote.dto.OrdenesResumenRequest
 
 class OrdenesRepository {
 
@@ -15,11 +17,12 @@ class OrdenesRepository {
     private val apiServicePrincipal = RetrofitClient.createService(baseUrlPrincipal)
     private val apiServiceRespaldo = RetrofitClient.createService(baseUrlRespaldo)
 
-    suspend fun getOrdenesEstado(filtro: OrdenesGeneralRequest): List<OrdenEstado> {
+    suspend fun getOrdenesEstado(filtro: OrdenesEstadoRequest): List<OrdenEstado> {
         try {
             // --- INTENTO 1: LLAMAR AL SERVICIO PRINCIPAL ---
             Log.d("OrdenesRepository", "Intentando llamar al endpoint principal...")
-            val response = apiServicePrincipal.getOrdenesEstado(filtro) // Usamos el servicio principal
+            val response =
+                apiServicePrincipal.getOrdenesEstado(filtro) // Usamos el servicio principal
 
             if (response.isSuccessful) {
                 Log.d("OrdenesRepository", "Éxito en el endpoint principal.")
@@ -30,12 +33,16 @@ class OrdenesRepository {
 
         } catch (e: Exception) {
             // --- FALLBACK: SI EL INTENTO 1 FALLA ---
-            Log.w("OrdenesRepository", "El endpoint principal falló: ${e.message}. Intentando con el de respaldo.")
+            Log.w(
+                "OrdenesRepository",
+                "El endpoint principal falló: ${e.message}. Intentando con el de respaldo."
+            )
 
             try {
                 // --- INTENTO 2: LLAMAR AL SERVICIO DE RESPALDO ---
                 Log.d("OrdenesRepository", "Intentando llamar al endpoint de respaldo...")
-                val responseRespaldo = apiServiceRespaldo.getOrdenesEstado(filtro) // Usamos el servicio de respaldo
+                val responseRespaldo =
+                    apiServiceRespaldo.getOrdenesEstado(filtro) // Usamos el servicio de respaldo
 
                 if (responseRespaldo.isSuccessful) {
                     Log.d("OrdenesRepository", "Éxito en el endpoint de respaldo.")
@@ -46,6 +53,33 @@ class OrdenesRepository {
             } catch (e2: Exception) {
                 Log.e("OrdenesRepository", "El endpoint de respaldo también falló: ${e2.message}")
                 throw e2 // Si ambos fallan, relanzamos la excepción
+            }
+        }
+
+    }
+
+    suspend fun getOrdenesTrabajoResumen(filtro: OrdenesResumenRequest): List<OrdenResumen> {
+
+        // Llamada al endpoint principal
+        try {
+            Log.d("OrdenesRepository","Intentando llamar al endpoint principal...")
+            val response = apiServicePrincipal.getOrdenesTrabajo(filtro)
+            if (response.isSuccessful) {
+                return response.body() ?: emptyList()
+            } else {
+                throw Exception("Error del servidor en endpoint principal: ${response.code()}")
+            }
+        } catch (e: Exception) {
+            Log.w("OrdenesRepository", "getOrdenesTrabajoResumen: El endpoint principal falló: ${e.message}. Intentando con el de respaldo.")            // Llamada al endpoint de respaldo
+            val responseRespaldo = apiServiceRespaldo.getOrdenesTrabajo(filtro)
+            try {
+                if (responseRespaldo.isSuccessful){
+                    return responseRespaldo.body() ?: emptyList()
+                } else {
+                    throw Exception("Error del servidor en endpoint de respaldo: ${responseRespaldo.code()}")
+                }
+            }catch (e2: Exception) {
+                Log.e("OrdenesRepository", "getOrdenesTrabajoResumen: El endpoint de respaldo también falló: ${e2.message}");                throw e2
             }
         }
     }

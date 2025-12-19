@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.gestorsiniestros.data.model.OrdenEstado
 import com.example.gestorsiniestros.data.model.OrdenResumen
 import com.example.gestorsiniestros.databinding.ItemRecyclerOtResumenBinding
 
@@ -35,6 +36,11 @@ class OrdenTrabajoResumenAdapter (var lista: ArrayList<OrdenResumen>, contexto: 
 
     override fun getItemCount(): Int {
         return lista.size
+    }
+
+    fun actualizarLista(listaOrdenes: List<OrdenResumen>) {
+        this.lista = ArrayList(listaOrdenes) // Convertimos la List a ArrayList
+        notifyDataSetChanged()
     }
 
 }

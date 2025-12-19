@@ -1,7 +1,7 @@
-package com.example.gestorsiniestros.data.remote.dto
+import com.google.gson.annotations.SerializedName
 
 data class OrdenesEstadoRequest(
-    val usuarioId: String,
-    val empresaId: String,
-    val estado: String
+
+    @SerializedName("empresa") val empresa: String,
+    @SerializedName("user_id") val userId: String
 )

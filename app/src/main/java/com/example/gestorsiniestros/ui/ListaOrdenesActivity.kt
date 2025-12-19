@@ -1,50 +1,62 @@
 package com.example.gestorsiniestros.ui
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.gestorsiniestros.R
-import com.example.gestorsiniestros.adapter.OrdenResumenAdapter
 import com.example.gestorsiniestros.adapter.OrdenTrabajoResumenAdapter
-import com.example.gestorsiniestros.data.model.OrdenEstado
-import com.example.gestorsiniestros.data.model.OrdenResumen
+import com.example.gestorsiniestros.data.remote.dto.OrdenesResumenRequest
 import com.example.gestorsiniestros.databinding.ActivityListaOrdenesBinding
-import com.example.gestorsiniestros.databinding.ActivityMainBinding
+import com.example.gestorsiniestros.viewmodel.ListaOrdenesViewModel
 
 class ListaOrdenesActivity : AppCompatActivity() {
+    //Vinculacion de vista con Binding
     private lateinit var binding: ActivityListaOrdenesBinding
-    private lateinit var adapterOtResumen: OrdenTrabajoResumenAdapter
-    private lateinit var lista: ArrayList<OrdenResumen>
-
+    private val viewModel: ListaOrdenesViewModel by viewModels()
+    private lateinit var adaptadorOrdenesResumen: OrdenTrabajoResumenAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListaOrdenesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        instancias()
-        initGUI()
-    }
 
-    private fun initGUI() {
-        binding.recyclerOrdenEstado.adapter = adapterOtResumen
-        binding.recyclerOrdenEstado.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val estadoId = intent.getStringExtra("estadoId")
 
-    }
-
-    private fun instancias() {
-        val lista = arrayListOf(
-            OrdenResumen(1, 3, 15, "2025-10-21 15:16:00", "2025-11-28 20:12:17", 1, "C/Falsa, 8", "MADRID", "28041", "MADRID", 1, null, 4, null, "0.00", "0.00", "0.00", "2025-10-21T13:17:05.000000Z", "2025-12-18T10:57:27.000000Z", null),
-            OrdenResumen(3, 2, 15, "2025-11-03 16:25:00", "2025-11-01 20:12:17", 1, null, null, null, null, 1, null, 1, null, "0.00", "0.00", "0.00", "2025-11-03T15:25:23.000000Z", "2025-12-18T10:57:27.000000Z", null),
-            OrdenResumen(4, 2, 15, "2025-11-03 17:33:00", "2025-11-27 20:12:17", 1, "ESTRELLA NAOS 2 6A", "MADRID", "28045", "MADRID", 1, "2025-11-03 17:33:00", 1, null, "0.00", "0.00", "0.00", "2025-11-03T16:34:04.000000Z", "2025-12-18T10:57:27.000000Z", null),
-            OrdenResumen(5, 3, 15, "2025-11-06 09:51:00", "2025-11-29 20:12:17", 1, "AV.EXTREMADURA 63", "FUENLABRADA", "28944", "MADRID", 1, null, 1, null, "0.00", "0.00", "0.00", "2025-11-06T09:03:00.000000Z", "2025-12-18T10:57:27.000000Z", null),
-            OrdenResumen(6, 3, 15, "2025-11-06 09:51:00", "2025-10-25 20:12:17", 1, "AV.EXTREMADURA 63", "FUENLABRADA", "28944", "MADRID", 1, null, 1, null, "0.00", "0.00", "0.00", "2025-11-06T09:03:46.000000Z", "2025-12-18T10:57:27.000000Z", null)
+        // Creamos el objeto request con los datos del Intent
+        val request = OrdenesResumenRequest(
+            userId = intent.getIntExtra("userId",7),
+            empresa = intent.getStringExtra("empresaId") ?: "001",
+            estadoId = intent.getIntExtra("estado", 0)
         )
-        adapterOtResumen = OrdenTrabajoResumenAdapter(lista, this)
-        binding.recyclerOrdenEstado.adapter = adapterOtResumen
 
+        // Llamamos al ViewModel para que inicie la carga de datos
+        viewModel.cargarOrdenesTrabajoResumen(request)
+
+        // 1. Inicializamos la UI
+        initUI()
+        // 2. Configuramos los observadores del ViewModel
+        initObservers()
+        // 3. Solicitamos los datos
+    }
+
+
+    private fun initUI() {
+        // Inicializamos el adapater con una lista vacia
+        adaptadorOrdenesResumen = OrdenTrabajoResumenAdapter(ArrayList(), this)
+        // Configuramos el reciclerview
+        binding.recyclerOrdenEstado.apply {
+            adapter = adaptadorOrdenesResumen
+            layoutManager = LinearLayoutManager(this@ListaOrdenesActivity)
+        }
+    }
+
+    private fun initObservers() {
+        // Observador para la lista de órdenes de trabajo
+        viewModel.uiState.observe(this) { listaOrdenes ->
+            // Cuando lleguen los datos, los enviamos al adapter
+            adaptadorOrdenesResumen.actualizarLista(listaOrdenes)
+        }
 
     }
+
 }
