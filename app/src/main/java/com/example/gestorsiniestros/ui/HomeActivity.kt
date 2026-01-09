@@ -2,6 +2,7 @@ package com.example.gestorsiniestros.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +27,7 @@ class HomeActivity : AppCompatActivity(), OnOrdenEstadoClickListener {
 
         instancias()
         initGUI()
+        setupEventListeners()
         observadores()
 
         homeViewModel.cargarOrdenes()
@@ -40,6 +42,38 @@ class HomeActivity : AppCompatActivity(), OnOrdenEstadoClickListener {
         binding.recyclerOrdenEstado.adapter = adapterOrdenEstado
         binding.recyclerOrdenEstado.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
+
+    private fun setupEventListeners() {
+        binding.btnDescargar.setOnClickListener {
+            // TODO: Lógica para el botón Descargar
+            Toast.makeText(this, "Botón Descargar pulsado", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnEntrar.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnSuper.setOnClickListener {
+            // TODO: Lógica para el botón Super
+            Toast.makeText(this, "Botón Super pulsado", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnCitas.setOnClickListener {
+            // TODO: Lógica para el botón Citas
+            Toast.makeText(this, "Botón Citas pulsado", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnBuscar.setOnClickListener {
+            // TODO: Lógica para el botón Buscar
+            Toast.makeText(this, "Botón Buscar pulsado", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnCargar.setOnClickListener {
+            homeViewModel.cargarOrdenes()
+            Toast.makeText(this, "Recargando lista...", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun observadores() {
