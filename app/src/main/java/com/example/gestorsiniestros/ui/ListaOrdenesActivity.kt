@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestorsiniestros.adapter.OrdenTrabajoResumenAdapter
+import com.example.gestorsiniestros.data.model.OrdenResumen
 import com.example.gestorsiniestros.data.remote.dto.OrdenesResumenRequest
 import com.example.gestorsiniestros.databinding.ActivityListaOrdenesBinding
 import com.example.gestorsiniestros.viewmodel.ListaOrdenesViewModel
@@ -44,12 +45,20 @@ class ListaOrdenesActivity : AppCompatActivity() {
 
     private fun initUI() {
         // Inicializamos el adapater con una lista vacia
-        adaptadorOrdenesResumen = OrdenTrabajoResumenAdapter(ArrayList(), this)
+        adaptadorOrdenesResumen = OrdenTrabajoResumenAdapter(ArrayList()) { orden ->
+            navigateToDetail(orden)
+        }
         // Configuramos el reciclerview
         binding.recyclerOrdenEstado.apply {
             adapter = adaptadorOrdenesResumen
             layoutManager = LinearLayoutManager(this@ListaOrdenesActivity)
         }
+    }
+
+    private fun navigateToDetail(orden: OrdenResumen) {
+        val intent = Intent(this, DetalleOT::class.java)
+        intent.putExtra("ordenId", orden.id)
+        startActivity(intent)
     }
 
     private fun initObservers() {
